@@ -21,6 +21,7 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import one.lbs.velocitymcdrcommand.VelocityMCDRCommand;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 import java.util.ArrayList;
 
@@ -29,7 +30,24 @@ public class MCDReforgedCommand implements SuggestionProvider<CommandSource>, co
     @Inject
     VelocityMCDRCommand pluginInstance;
 
+    private @Nullable CommandMeta selfMeta = null;
+
     private final ArrayList<CommandMeta> registeredCommands = new ArrayList<>();
+
+    public void registerSelf() {
+        CommandManager commandManager = pluginInstance.server.getCommandManager();
+        BrigadierCommand command = createBrigadierCommand();
+        selfMeta = commandManager.metaBuilder(command).build();
+        commandManager.register(selfMeta, command);
+        pluginInstance.logger.info("MCDReforged suggestion enabled");
+    }
+
+    public void unregisterSelf() {
+        if (selfMeta != null) {
+            pluginInstance.server.getCommandManager().unregister(selfMeta);
+        }
+        pluginInstance.logger.info("MCDReforged suggestion disabled");
+    }
 
     public BrigadierCommand createBrigadierCommand() {
         LiteralCommandNode<CommandSource> llsMCDReforgedRegisterCommand = createSubCommand().build();

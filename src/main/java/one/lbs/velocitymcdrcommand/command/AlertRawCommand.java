@@ -4,6 +4,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.velocitypowered.api.command.CommandManager;
+import com.velocitypowered.api.command.CommandMeta;
 import one.lbs.velocitymcdrcommand.VelocityMCDRCommand;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
@@ -11,14 +13,28 @@ import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 
 public class AlertRawCommand {
+    public static @Nullable CommandMeta registeredMeta = null;
+
     public static void register(VelocityMCDRCommand pluginInst) {
-        pluginInst.server.getCommandManager().register(createBrigadierCommand(pluginInst));
-        pluginInst.logger.info("Alertraw command registered");
+        CommandManager commandManager = pluginInst.server.getCommandManager();
+        BrigadierCommand command = createBrigadierCommand(pluginInst);
+        registeredMeta = commandManager.metaBuilder(command).build();
+        commandManager.register(registeredMeta, command);
+        pluginInst.logger.info("Enabled alert raw command");
     }
+
+    public static void unregister(VelocityMCDRCommand pluginInst) {
+        if (registeredMeta != null) {
+            pluginInst.server.getCommandManager().unregister(registeredMeta);
+        }
+        pluginInst.logger.info("Disabled alert raw command");
+    }
+
 
     private static BrigadierCommand createBrigadierCommand(VelocityMCDRCommand pluginInst) {
         LiteralCommandNode<CommandSource> alertRawNode = LiteralArgumentBuilder.<CommandSource>literal("alertraw")

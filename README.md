@@ -5,10 +5,38 @@ Splitted from [lls-manager(LBS fork)](https://github.com/Lazy-Bing-Server/lls-ma
 
 MCDR command suggestion compatible with [Minecraft Command Register](https://github.com/AnzhiZhang/MCDReforgedPlugins/tree/master/minecraft_command_register)
 
+Player chat event parsing compatible with [LBSVelocityHandler](https://github.com/Lazy-Bing-Server/VelocityHandler-MCDR/)
+
 And this plugin will print chat message to velocity console to make MCDReforged custom handlers available to parse commands in chat.
 
 ## Config
-No configuration is required
+
+Config path: `plugins/VelocityMCDRCommand/config.json`
+
+1. `enableMCDRCommandSuggestion`
+
+Enable `mcdr` command to register MCDR command tree to Velocity and provides command suggestion
+
+Default: `true`
+
+2. `enablePrintPlayerChat`
+
+Enable printing chat message to server console
+
+Default: `true`
+
+3. `playerChatLogFormat`
+
+Log format of printing chat message
+
+Default: `[{0}] <{1}> {2}` (0: sub-server, 1: player name, 2: message)
+
+4. `enableAlertRaw`
+
+Enable `alertraw` command to send raw json to server players
+
+Default: `true`
+
 
 ## Command
 
